@@ -1,9 +1,11 @@
 import nltk
 import questions.q1 as q1
+import questions.q2 as q2
 
 DEMOS = [
     ("download data", nltk.download),
-    ("q1", q1.demo)
+    ("q1", q1.demo),
+    ("q2", q2.demo),
 ]
 
 

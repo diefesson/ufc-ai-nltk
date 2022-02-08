@@ -4,7 +4,7 @@ from numpy import average
 FILES = [
     "shakespeare-caesar.txt",
     "shakespeare-hamlet.txt",
-    "shakespeare-macbeth.txt"
+    "shakespeare-macbeth.txt",
 ]
 
 
@@ -32,7 +32,7 @@ def demo():
             [w for w, c in repetition_count.items() if c > 1]
         )
         average_sentence_len = average([len(s) for s in sents])
-        print(f"arquivo {f}")
+        print(f"Arquivo {f}")
         print(f"\tPalavras:{word_count}")
         print(f"\tSentenças: {sent_count}")
         print(f"\tPalavras não repetidas: {non_repeat_count}")
