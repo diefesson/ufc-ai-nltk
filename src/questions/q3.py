@@ -17,17 +17,27 @@ def preprocess(data):
     return [stemmer.stem(w.lower()) for w in word_tokenize(data) if w not in stopwords.words("english")]
 
 
+def normalized_vector(vocab, bag):
+    return [bag[w] / bag.N() for w in vocab]
+
+
 def distance(bag1, bag2):
-    vocab = set(bag1).union(bag2)
-    intersection = set(bag1).intersection(bag2)
+    vocab = bag1 + bag2
+    intersection = bag1 & bag2
+    vector1 = normalized_vector(vocab, bag1)
+    vector2 = normalized_vector(vocab, bag2)
     up = sum(
-        bag1[w] * bag2[w] for w in vocab
+        x1 * x2 for x1, x2 in zip(vector1, vector2)
     )
     down = (
-        sqrt(sum(bag1[w] * bag1[w] for w in vocab)) *
-        sqrt(sum(bag2[w] * bag2[w] for w in vocab))
+        sqrt(sum(x ** 2 for x in vector1)) *
+        sqrt(sum(x ** 2 for x in vector2))
     )
-    return (up / down), len(intersection)
+    return (up / down), sum(x for x in intersection.values())
+
+
+def calculate_compound(positive, negative):
+    return (positive - negative) / (positive + negative)
 
 
 def demo():
@@ -42,8 +52,8 @@ def demo():
         words_bag = FreqDist(preprocess(load(f)))
         positive, positive_count = distance(words_bag, positive_bag)
         negative, negative_count = distance(words_bag, negative_bag)
-        classification = (positive - negative) / (positive + negative)
+        compound = calculate_compound(positive, negative)
         print(f"Arquivo: {f}")
         print(f"\tPositivo: {positive} ({positive_count} palavras)")
         print(f"\tNegativo: {negative} ({negative_count} palavras)")
-        print(f"\tClassificação: {classification}")
+        print(f"\tClassificação: {compound}")
